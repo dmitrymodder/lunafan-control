@@ -1,0 +1,37 @@
+// EXAMPLE CONFIG FOR PC WITH 2 FANS AND CPU COOLER. TESTED ON ASUS PRIME B550M-A, ID-COOLING. ARCH LINUX
+{
+  "temp_sensor": "/sys/class/hwmon/hwmon1/temp1_input",
+  "update_interval_ms": 5000,
+  "fans": [
+    {
+      "name": "case1",
+      "pwm_path": "/sys/class/hwmon/hwmon3/pwm1",
+      "input_path": "/sys/class/hwmon/hwmon3/fan1_input",
+      "curve": [
+        {"temp": 40, "percent": 18},
+        {"temp": 60, "percent": 58},
+        {"temp": 75, "percent": 100}
+      ]
+    },
+    {
+      "name": "cpu",
+      "pwm_path": "/sys/class/hwmon/hwmon3/pwm2",
+      "input_path": "/sys/class/hwmon/hwmon3/fan2_input",
+      "curve": [
+        {"temp": 40, "percent": 24},
+        {"temp": 60, "percent": 49},
+        {"temp": 75, "percent": 100}
+      ]
+    },
+    {
+      "name": "case2",
+      "pwm_path": "/sys/class/hwmon/hwmon3/pwm3",
+      "input_path": "/sys/class/hwmon/hwmon3/fan3_input",
+      "curve": [
+        {"temp": 40, "percent": 18},
+        {"temp": 60, "percent": 58},
+        {"temp": 75, "percent": 100}
+      ]
+    }
+  ]
+}

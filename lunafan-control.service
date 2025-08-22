@@ -1,0 +1,14 @@
+[Unit]
+Description=LunaFan Control Daemon
+After=sysinit.target local-fs.target
+Wants=local-fs.target
+
+[Service]
+ExecStartPre=/bin/sleep 5
+ExecStart=/usr/bin/lunafan-control run
+Restart=always
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
