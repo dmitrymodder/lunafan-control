@@ -130,11 +130,6 @@ func runLoop() {
 
 func printStats() {
 	config := loadConfig()
-	// For future reference. Currently, it only works with AMD. Disabled.
-	//tempStr, _ := os.ReadFile(config.TempSensor)
-	//tempMilli, _ := strconv.Atoi(strings.TrimSpace(string(tempStr)))
-	//temp := float64(tempMilli) / 1000.0
-	//fmt.Printf("Tctl: %.1f°C\n", temp)
 	for _, fan := range config.Fans {
 		if fan.InputPath != "" {
 			rpmStr, _ := os.ReadFile(fan.InputPath)
@@ -145,6 +140,9 @@ func printStats() {
 }
 
 func setConfig(name string) {
+	if os.Geteuid() != 0 {
+		log.Fatal("This operation requires root privileges")
+	}
 	configDir := "/etc/lunafan-control/configs"
 	target := "/etc/lunafan-control/config.json"
 	src := filepath.Join(configDir, name+".json")
@@ -160,6 +158,9 @@ func setConfig(name string) {
 }
 
 func manageService(action string) {
+	if os.Geteuid() != 0 {
+		log.Fatal("This operation requires root privileges")
+	}
 	cmd := exec.Command("systemctl", action, "lunafan-control.service")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -176,26 +177,26 @@ func main() {
 	}
 	cmd := os.Args[1]
 	switch cmd {
-	case "run":
-		runLoop()
-	case "start":
-		manageService("start")
-	case "stop":
-		manageService("stop")
-	case "enable":
-		manageService("enable")
-	case "disable":
-		manageService("disable")
-	case "stats":
-		printStats()
-	case "config":
-		if len(os.Args) < 3 {
-			fmt.Println("Usage: lunafan-control config <name>")
+		case "run":
+			runLoop()
+		case "start":
+			manageService("start")
+		case "stop":
+			manageService("stop")
+		case "enable":
+			manageService("enable")
+		case "disable":
+			manageService("disable")
+		case "stats":
+			printStats()
+		case "config":
+			if len(os.Args) < 3 {
+				fmt.Println("Usage: lunafan-control config <name>")
+				os.Exit(1)
+			}
+			setConfig(os.Args[2])
+		default:
+			fmt.Println("Unknown command: ", cmd)
 			os.Exit(1)
-		}
-		setConfig(os.Args[2])
-	default:
-		fmt.Println("Unknown command: ", cmd)
-		os.Exit(1)
 	}
 }

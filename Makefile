@@ -12,9 +12,9 @@ package:
 
 install: build
 	sudo install -Dm755 lunafan-control /usr/bin/lunafan-control
-	sudo install -Dm644 config.json /etc/lunafan-control/config.json
 	sudo mkdir -p /etc/lunafan-control/configs
-	sudo cp config.json /etc/lunafan-control/configs/default.json
+	sudo install -Dm644 config.json /etc/lunafan-control/configs/default.json
+	sudo ln -sf /etc/lunafan-control/configs/default.json /etc/lunafan-control/config.json
 	sudo install -Dm644 lunafan-control.service /usr/lib/systemd/system/lunafan-control.service
 	sudo systemctl daemon-reload
 
